@@ -1,0 +1,10 @@
+html
+    head
+        title
+    body
+        h1 admin page
+        p for uploading videos
+        form(action="/video/upload",method="post",enctype="multipart/form-data")
+            input(type="text",name="name",placeholder="Name of video")
+            input(type="file",name="video")
+            button(type="submit") Upload

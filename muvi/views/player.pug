@@ -1,0 +1,139 @@
+html
+    head
+        title Player
+        meta(name="viewport",content="width=device-width, initial-scale=1")
+        link(rel="stylesheet" href="http://www.w3schools.com/lib/w3.css")
+        link(href="https://fonts.googleapis.com/css?family=Cantarell:400i",rel="stylesheet")
+        script(src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js")
+        script(src="https://use.fontawesome.com/87a8b854d4.js")
+        style(type="text/css").
+            .header{
+                font-family: 'Cantarell', sans-serif;
+            }
+            #video-name
+            {
+                margin:0px;
+                padding:0px;
+            }
+            @media only screen and (max-width: 500px){
+                #video-player{
+                    margin-top:-50px;
+                    width:100%;
+                    height:290px;
+                }
+            }
+
+
+    body
+        .w3-container.w3-card-4.w3-red
+            h1.header 
+                i(class="fa fa-forward",aria-hidden="true") 
+                span  myPLAY
+                .w3-container.w3-right
+                    a
+                        i(class="fa fa-user")
+                        span  #{name}
+            ul.w3-navbar
+                li
+                    a.w3-border-white.w3-bottombar.w3-hover-red(href="/user/dashboard",data-class=".featured")  Home
+                li.w3-right
+                    a(href="/user/logout") 
+                        i(class="fa fa-sign-out",aria-hidden="true") 
+                        span  Logout
+        .w3-container.w3-row
+            h1 Now Playing
+            .w3-col.m7
+                .w3-col.m12
+                    h3(id="video-name")
+                    video(id="video-player",data-id=id,src='/video/play/'+id,width="640",height="420",controls)
+                .w3-col.m2
+                    button.w3-btn.w3-white(id="like-button")
+                        i(class="fa fa-heart")  
+                        span(id="likes")
+                    h2
+                        span(id="views")
+                        span Views
+            
+            ul.w3-ul.w3-col.m5(id="video-list")
+                h1.w3-margin More Videos
+
+
+
+
+
+
+
+
+
+
+        script.
+            var id = $('video').data('id');
+            $(document).ready(function(){
+                $.ajax({
+                    url:'/video/islike/'+id,
+                    method:'get',
+                    success:function(response){
+                        if(response=='liked') $('#like-button').addClass('w3-text-red');
+                        else $('#like-button').removeClass('w3-text-red');
+                    }
+                });
+
+                
+                $.ajax({
+                    url:'/video',
+                    method:'get',
+                    success:function(videos){
+                        for(var i=0;i<videos.length;i++){
+                            var item = '<li class="w3-card-4 w3-margin w3-col m11"><a href="/video/player/'+videos[i]._id+'">'+videos[i].name+'</a></li>';
+                            $('#video-list').append(item);
+                        }
+                    }
+                });
+
+                $.ajax({
+                    url:'/video/info/'+id,
+                    method:'get',
+                    success: function(video){
+                        $('#likes').append(video.likes);
+                        $('#views').append(video.views);
+                        $('#video-name').html(video.name);
+                    }
+                });
+
+                $('#video-player').on('load',function(){
+                    $.ajax({
+                        url:'/video/views/'+id,
+                        method:'get',
+                        success:function(){
+                            $.ajax({
+                                url:'/video/info/'+id,
+                                method:'get',
+                                success: function(video){
+                                    $('#likes').html(video.likes);
+                                    $('#views').html(video.views);
+                                }
+                            });
+                        }
+                    });
+                });
+
+                $('#like-button').on('click',function(){
+                    $.ajax({
+                        url:'/video/like/'+id,
+                        method:'get',
+                        success:function(response){
+                            console.log(response);
+                            if(response=='liked') $('#like-button').addClass('w3-text-red');
+                            else $('#like-button').removeClass('w3-text-red');
+                            $.ajax({
+                                url:'/video/info/'+id,
+                                method:'get',
+                                success: function(video){
+                                    $('#likes').html(video.likes);
+                                    $('#views').html(video.views);
+                                }
+                            });
+                        }
+                    });
+                });
+            });

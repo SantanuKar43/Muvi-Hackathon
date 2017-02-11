@@ -1,0 +1,115 @@
+html
+    head
+        title
+        meta(name="viewport",content="width=device-width, initial-scale=1")
+        link(rel="stylesheet" href="http://www.w3schools.com/lib/w3.css")
+        link(href="https://fonts.googleapis.com/css?family=Cantarell:400i",rel="stylesheet")
+        script(src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js")
+        script(src="https://use.fontawesome.com/87a8b854d4.js")
+        style(type="text/css").
+            .header{
+                font-family: 'Cantarell', sans-serif;
+            }
+            .display{
+                display:block;
+            }
+            .hide{
+                display:none;
+            }
+    body
+        .w3-container.w3-card-4.w3-red
+            h1.header 
+                i(class="fa fa-forward",aria-hidden="true") 
+                span  myPLAY
+                .w3-container.w3-right
+                    a
+                        i(class="fa fa-user")
+                        span  #{name}
+            ul.w3-navbar
+                li
+                    a.w3-border-white.w3-bottombar.w3-hover-red(data-class=".featured")  Featured
+                li 
+                    a.w3-border-white.w3-hover-red(data-class=".trending") Trending
+                li 
+                    a.w3-border-white.w3-hover-red(data-class=".history") History
+                li 
+                    a.w3-border-white.w3-hover-red(data-class=".favourites") Favourites
+                li.w3-right
+                    a(href="/user/logout") 
+                        i(class="fa fa-sign-out",aria-hidden="true") 
+                        span  Logout
+        .w3-container.featured.display
+            h1 Featured Videos
+            ul.w3-ul.w3-row(id="featured")
+        
+        .w3-container.trending.hide
+            h1 Trending (top-3)
+            ul.w3-ul.w3-row(id="trending")
+        
+        .w3-container.history.hide
+            h1 Your History
+            ul.w3-ul.w3-row(id="history")
+
+        .w3-container.favourites.hide
+            h1 Your Favourites
+            ul.w3-ul.w3-row(id="favourites")
+
+
+        script.
+            $(document).ready(function(){
+
+                $('.w3-hover-red').on('click',function(e){
+                    $('.display').addClass('hide');
+                    var target_id = $(this).data('class');
+                    
+                    $(""+target_id).removeClass('hide');
+                    $(""+target_id).addClass('display');
+                    $('.w3-bottombar').removeClass('w3-bottombar');
+                    $(this).addClass('w3-bottombar');
+                });
+
+                $.ajax({
+                    url:'/video',
+                    method:'get',
+                    success:function(videos){
+                        for(var i=0;i<videos.length;i++){
+                            var item = '<li class="w3-card-4 w3-col w3-margin m3"><a href="/video/player/'+videos[i]._id+'">'+videos[i].name+'</a></li>';
+                            $('#featured').append(item);
+                        }
+                    }       
+                });
+
+                $.ajax({
+                    url:'/video/trending',
+                    method:'get',
+                    success:function(videos){
+                        for(var i=0;i<3;i++){
+                            var item = '<li class="w3-card-4 w3-col w3-margin m3"><a href="/video/player/'+videos[i]._id+'">'+videos[i].name+'</a></li>';
+                            $('#trending').append(item);
+                        }
+                    }
+                });
+
+                $.ajax({
+                    url:'/video/history',
+                    method:'get',
+                    success:function(videos){
+                        for(var i=0;i<3;i++){
+                            var item = '<li class="w3-card-4 w3-col w3-margin m3"><a href="/video/player/'+videos[i]._id+'">'+videos[i].name+'</a></li>';
+                            $('#history').append(item);
+                        }
+                    }
+                });
+
+                $.ajax({
+                    url:'/video/favourites',
+                    method:'get',
+                    success:function(videos){
+                        for(var i=0;i<3;i++){
+                            var item = '<li class="w3-card-4 w3-col w3-margin m3"><a href="/video/player/'+videos[i]._id+'">'+videos[i].name+'</a></li>';
+                            $('#favourites').append(item);
+                        }
+                    }
+                });
+            });
+            

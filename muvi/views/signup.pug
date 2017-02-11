@@ -1,0 +1,40 @@
+html
+    head
+      title
+      meta(name="viewport",content="width=device-width, initial-scale=1")
+      link(rel="stylesheet" href="http://www.w3schools.com/lib/w3.css")
+      link(href="https://fonts.googleapis.com/css?family=Cantarell:400i",rel="stylesheet")
+      script(src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js")
+      script(src="https://use.fontawesome.com/87a8b854d4.js")
+      script(src="/script.js")
+      style(type="text/css").
+        .header{
+          font-family: 'Cantarell', sans-serif;
+        }
+        .login
+        {
+          padding-top:50px;
+          width:50%;
+          margin:auto;
+        }
+        @media only screen and (max-width: 500px) {
+          .login {
+            width:100%;
+          }
+        }
+
+    body
+    .w3-container.w3-card-4.w3-red
+        h1.header 
+          i(class="fa fa-forward",aria-hidden="true") 
+          span  myPLAY
+    .w3-container.w3-center
+      .w3-container.login 
+          h1 Sign Up
+          form(action="/user/signup",method="post")
+            input(name="email",type="email",placeholder="enter email").w3-input.w3-border.w3-margin-bottom
+            input(name="name",type="text",placeholder="enter name").w3-input.w3-border.w3-margin-bottom
+            input(name="pwd",type="password",placeholder="enter password").w3-input.w3-border
+            button(type="submit").w3-btn-block.w3-margin-top.w3-red Sign Up
+          p Already registered? 
+            a(href="/").w3-text-light-blue.w3-hover-text-blue Sign in
